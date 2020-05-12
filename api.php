@@ -316,6 +316,28 @@ $app->post('/updateRoom', function (Request $request, Response $response, array 
 
 
 });
+
+$app->get('/printCheckin/{idcheck}', function (Request $request, Response $response, array $args) {
+    $id = $args['idcheck'];
+    $sql = "Select * from hotel,book_log join reservation_info
+            on bl_reservation = resinfo_id 
+            join guest_info
+            on bl_ginfo = ginfo_id
+            join rooms
+            on ginfo_room = room_id
+            join room_type
+            on room_type = rtype_id
+            join building
+            on room_building = building_id
+            join room_view
+            on room_view = rview_id
+            join agency
+            on resinfo_agency = agency_id
+            where ginfo_id='".$id."'";
+    $sth = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    
+    return $this->response->withJson($sth);
+});
 // End Code Group 5
 
 
